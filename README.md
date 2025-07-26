@@ -44,8 +44,8 @@ The application provides:
 - **Custom CSS** - Forest fire theme
 
 ### Deployment
-- **Gunicorn** - WSGI server
-- **Replit** - Cloud hosting
+- **Render**
+- live demo:- https://algerian-forest-fire-prediction-dpf7.onrender.com
 
 ## 📁 Project Structure
 
