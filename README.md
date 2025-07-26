@@ -44,9 +44,7 @@ The application provides:
 - **Custom CSS** - Forest fire theme
 
 ### Deployment
-- **Gunicorn** - WSGI server
-- **Replit** - Cloud hosting
-
+- **Render**
 ## 📁 Project Structure
 
 ```
@@ -166,31 +164,11 @@ The FWI system combines weather observations and fuel moisture codes:
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - Algerian forest fire dataset from research institutions
 - Fire Weather Index system from Canadian Forest Service
 - Bootstrap and Chart.js communities
 - Flask and scikit-learn developers
-
-## 📊 Dataset Citation
-
-If you use this project or dataset in your research, please cite:
-```
-Algerian Forest Fires Dataset
-Regions: Bejaia and Sidi-Bel-Abbes, Algeria
-Period: 2012
-Features: Weather conditions and fire weather indices
-```
-
-## 🐛 Issues & Support
-
-For issues, questions, or contributions, please open an issue on GitHub.
-
----
 
 **Built with ❤️ for forest fire prevention and environmental protection**
