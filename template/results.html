@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Prediction Results - Algerian Forest Fire Prediction System{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col">
+                <h1 class="display-5 fw-bold text-forest">
+                    <i class="fas fa-chart-line text-fire"></i>
+                    Prediction Results
+                </h1>
+                <p class="lead text-muted">
+                    Fire Weather Index prediction based on your input
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Results Section -->
+{% if result %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Main Result Card -->
+                <div class="result-main-card mb-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 text-center">
+                            <div class="fwi-display">
+                                <div class="fwi-value">{{ result.fwi_value }}</div>
+                                <div class="fwi-label">Fire Weather Index</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 text-center">
+                            <div class="risk-display risk-{{ result.risk_level.lower().replace(' ', '-') }}">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div class="risk-level">{{ result.risk_level }}</div>
+                                <div class="risk-label">Risk Level</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Risk Interpretation -->
+                <div class="interpretation-card mb-4">
+                    <h5 class="text-fire">
+                        <i class="fas fa-info-circle"></i>
+                        Risk Interpretation
+                    </h5>
+                    
+                    {% if result.risk_level == "Very Low" %}
+                    <div class="alert alert-success">
+                        <h6><i class="fas fa-check-circle"></i> Very Low Fire Risk</h6>
+                        <p class="mb-0">Minimal fire danger. Weather conditions are not conducive to fire ignition or spread. Standard precautions are sufficient.</p>
+                    </div>
+                    {% elif result.risk_level == "Low" %}
+                    <div class="alert alert-info">
+                        <h6><i class="fas fa-info-circle"></i> Low Fire Risk</h6>
+                        <p class="mb-0">Low fire danger. Some potential for fire activity but generally safe conditions. Basic fire safety measures recommended.</p>
+                    </div>
+                    {% elif result.risk_level == "Moderate" %}
+                    <div class="alert alert-warning">
+                        <h6><i class="fas fa-exclamation-triangle"></i> Moderate Fire Risk</h6>
+                        <p class="mb-0">Moderate fire danger. Increased potential for fire activity. Enhanced monitoring and preparedness recommended.</p>
+                    </div>
+                    {% elif result.risk_level == "High" %}
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-fire"></i> High Fire Risk</h6>
+                        <p class="mb-0">High fire danger. Significant potential for intense fire activity. Restrict outdoor burning and increase vigilance.</p>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-danger">
+                        <h6><i class="fas fa-fire-alt"></i> Very High Fire Risk</h6>
+                        <p class="mb-0">Extreme fire danger. Very high potential for explosive fire behavior. Avoid all outdoor burning and implement emergency preparedness.</p>
+                    </div>
+                    {% endif %}
+                </div>
+
+                <!-- Input Summary -->
+                <div class="input-summary-card">
+                    <h5 class="text-forest">
+                        <i class="fas fa-list"></i>
+                        Input Summary
+                    </h5>
+                    
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="input-group-summary">
+                                <h6 class="text-fire">Weather Conditions</h6>
+                                <ul class="list-unstyled input-list">
+                                    <li><strong>Temperature:</strong> {{ result.input_data.temperature }}°C</li>
+                                    <li><strong>Humidity:</strong> {{ result.input_data.rh }}%</li>
+                                    <li><strong>Wind Speed:</strong> {{ result.input_data.ws }} km/h</li>
+                                    <li><strong>Rainfall:</strong> {{ result.input_data.rain }} mm</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="input-group-summary">
+                                <h6 class="text-fire">Fire Weather Components</h6>
+                                <ul class="list-unstyled input-list">
+                                    <li><strong>FFMC:</strong> {{ result.input_data.ffmc }}</li>
+                                    <li><strong>DMC:</strong> {{ result.input_data.dmc }}</li>
+                                    <li><strong>DC:</strong> {{ result.input_data.dc }}</li>
+                                    <li><strong>ISI:</strong> {{ result.input_data.isi }}</li>
+                                    <li><strong>BUI:</strong> {{ result.input_data.bui }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="input-group-summary">
+                                <h6 class="text-fire">Location & Classification</h6>
+                                <ul class="list-unstyled input-list">
+                                    <li><strong>Region:</strong> {{ result.input_data.region }}</li>
+                                    <li><strong>Risk Class:</strong> {{ result.input_data.classes }}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('predict_page') }}" class="btn btn-fire btn-lg me-3">
+                        <i class="fas fa-redo"></i>
+                        Make Another Prediction
+                    </a>
+                    <a href="{{ url_for('dashboard') }}" class="btn btn-outline-forest btn-lg">
+                        <i class="fas fa-chart-bar"></i>
+                        View Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <h4>No Results Available</h4>
+                    <p>No prediction results found. Please make a prediction first.</p>
+                    <a href="{{ url_for('predict_page') }}" class="btn btn-fire">Make a Prediction</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

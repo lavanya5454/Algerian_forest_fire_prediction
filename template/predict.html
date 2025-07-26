@@ -1,0 +1,230 @@
+{% extends "base.html" %}
+
+{% block title %}Predict Fire Risk - Algerian Forest Fire Prediction System{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col">
+                <h1 class="display-5 fw-bold text-forest">
+                    <i class="fas fa-calculator text-fire"></i>
+                    Fire Weather Index Prediction
+                </h1>
+                <p class="lead text-muted">
+                    Enter weather conditions and fire indices to predict forest fire risk
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Prediction Form Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="prediction-form-card">
+                    <form action="{{ url_for('predict_datapoint') }}" method="post" class="needs-validation" novalidate>
+                        
+                        <!-- Weather Conditions -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-cloud-sun text-fire"></i>
+                                Weather Conditions
+                            </h4>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="Temperature" class="form-label">
+                                        <i class="fas fa-thermometer-half"></i> Temperature (°C)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="Temperature" 
+                                           name="Temperature" placeholder="e.g., 32" required>
+                                    <div class="form-text">Temperature in Celsius (20-45°C typical range)</div>
+                                    <div class="invalid-feedback">Please enter a valid temperature.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="RH" class="form-label">
+                                        <i class="fas fa-tint"></i> Relative Humidity (%)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="RH" 
+                                           name="RH" placeholder="e.g., 65" min="0" max="100" required>
+                                    <div class="form-text">Relative humidity percentage (0-100%)</div>
+                                    <div class="invalid-feedback">Please enter humidity between 0-100%.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="Ws" class="form-label">
+                                        <i class="fas fa-wind"></i> Wind Speed (km/h)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="Ws" 
+                                           name="Ws" placeholder="e.g., 15" min="0" required>
+                                    <div class="form-text">Wind speed in kilometers per hour</div>
+                                    <div class="invalid-feedback">Please enter a valid wind speed.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="Rain" class="form-label">
+                                        <i class="fas fa-cloud-rain"></i> Rainfall (mm)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="Rain" 
+                                           name="Rain" placeholder="e.g., 0.5" min="0" required>
+                                    <div class="form-text">Rainfall in millimeters</div>
+                                    <div class="invalid-feedback">Please enter a valid rainfall amount.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fire Weather Components -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-fire text-fire"></i>
+                                Fire Weather Components
+                            </h4>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="FFMC" class="form-label">
+                                        <i class="fas fa-leaf"></i> FFMC (Fine Fuel Moisture Code)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="FFMC" 
+                                           name="FFMC" placeholder="e.g., 85.5" required>
+                                    <div class="form-text">Moisture content of fine fuel (0-101)</div>
+                                    <div class="invalid-feedback">Please enter a valid FFMC value.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="DMC" class="form-label">
+                                        <i class="fas fa-tree"></i> DMC (Duff Moisture Code)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="DMC" 
+                                           name="DMC" placeholder="e.g., 12.5" required>
+                                    <div class="form-text">Moisture content of moderately deep organic layers</div>
+                                    <div class="invalid-feedback">Please enter a valid DMC value.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="DC" class="form-label">
+                                        <i class="fas fa-seedling"></i> DC (Drought Code)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="DC" 
+                                           name="DC" placeholder="e.g., 45.2" required>
+                                    <div class="form-text">Moisture content of deep organic layers</div>
+                                    <div class="invalid-feedback">Please enter a valid DC value.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="ISI" class="form-label">
+                                        <i class="fas fa-expand-arrows-alt"></i> ISI (Initial Spread Index)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="ISI" 
+                                           name="ISI" placeholder="e.g., 8.5" required>
+                                    <div class="form-text">Expected rate of fire spread</div>
+                                    <div class="invalid-feedback">Please enter a valid ISI value.</div>
+                                </div>
+                                
+                                <div class="col-md-12">
+                                    <label for="BUI" class="form-label">
+                                        <i class="fas fa-layer-group"></i> BUI (Buildup Index)
+                                    </label>
+                                    <input type="number" step="any" class="form-control" id="BUI" 
+                                           name="BUI" placeholder="e.g., 18.5" required>
+                                    <div class="form-text">Amount of fuel available for combustion</div>
+                                    <div class="invalid-feedback">Please enter a valid BUI value.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Location and Classification -->
+                        <div class="form-section">
+                            <h4 class="section-title">
+                                <i class="fas fa-map-marker-alt text-fire"></i>
+                                Location & Classification
+                            </h4>
+                            
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="Region" class="form-label">
+                                        <i class="fas fa-globe-africa"></i> Region
+                                    </label>
+                                    <select class="form-select" id="Region" name="Region" required>
+                                        <option value="">Select Region</option>
+                                        <option value="bejaia">Bejaia</option>
+                                        <option value="sidi-bel-abbes">Sidi-Bel-Abbes</option>
+                                    </select>
+                                    <div class="form-text">Algerian region for prediction</div>
+                                    <div class="invalid-feedback">Please select a region.</div>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <label for="Classes" class="form-label">
+                                        <i class="fas fa-tags"></i> Fire Risk Class
+                                    </label>
+                                    <select class="form-select" id="Classes" name="Classes" required>
+                                        <option value="">Select Risk Class</option>
+                                        <option value="low">Low Risk</option>
+                                        <option value="moderate">Moderate Risk</option>
+                                        <option value="high">High Risk</option>
+                                        <option value="very high">Very High Risk</option>
+                                    </select>
+                                    <div class="form-text">Initial risk assessment</div>
+                                    <div class="invalid-feedback">Please select a risk class.</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
+                            <button type="submit" class="btn btn-fire btn-lg px-5">
+                                <i class="fas fa-calculator"></i>
+                                Calculate Fire Weather Index
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- Info Panel -->
+            <div class="col-lg-4">
+                <div class="info-panel">
+                    <h5 class="text-fire">
+                        <i class="fas fa-info-circle"></i>
+                        Prediction Information
+                    </h5>
+                    
+                    <div class="info-item">
+                        <h6>What is FWI?</h6>
+                        <p class="small text-muted">
+                            The Fire Weather Index combines weather observations and fuel moisture 
+                            codes to provide a numeric rating of fire intensity.
+                        </p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h6>Model Accuracy</h6>
+                        <p class="small text-muted">
+                            Our Ridge regression model has been trained on historical Algerian 
+                            forest fire data with cross-validation for optimal performance.
+                        </p>
+                    </div>
+                    
+                    <div class="info-item">
+                        <h6>Data Sources</h6>
+                        <p class="small text-muted">
+                            Based on meteorological data from Bejaia and Sidi-Bel-Abbes regions 
+                            of Algeria, including temperature, humidity, wind, and rainfall measurements.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/predictions.js') }}"></script>
+{% endblock %}

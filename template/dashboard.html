@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Algerian Forest Fire Prediction System{% endblock %}
+
+{% block content %}
+<!-- Header Section -->
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col">
+                <h1 class="display-5 fw-bold text-forest">
+                    <i class="fas fa-chart-bar text-fire"></i>
+                    Fire Risk Analytics Dashboard
+                </h1>
+                <p class="lead text-muted">
+                    Comprehensive insights from Algerian forest fire data
+                </p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Cards -->
+<section class="py-4">
+    <div class="container">
+        {% if data and data.stats %}
+        <div class="row g-4">
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-database text-primary"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.total_records }}</div>
+                    <div class="stat-label">Total Records</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire text-danger"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.fire_incidents }}</div>
+                    <div class="stat-label">Fire Incidents</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-shield-alt text-success"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.no_fire_incidents }}</div>
+                    <div class="stat-label">No Fire Days</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-thermometer-half text-warning"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.avg_temperature }}°C</div>
+                    <div class="stat-label">Avg Temperature</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-tint text-info"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.avg_humidity }}%</div>
+                    <div class="stat-label">Avg Humidity</div>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 col-sm-6">
+                <div class="stat-card text-center">
+                    <div class="stat-icon">
+                        <i class="fas fa-fire-alt text-fire"></i>
+                    </div>
+                    <div class="stat-number">{{ data.stats.avg_fwi }}</div>
+                    <div class="stat-label">Avg FWI</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<!-- Charts Section -->
+<section class="py-4">
+    <div class="container">
+        <div class="row g-4">
+            <!-- Monthly Fire Incidents Chart -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5><i class="fas fa-calendar-alt text-fire"></i> Monthly Fire Incidents</h5>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="monthlyFireChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Risk Distribution Chart -->
+            <div class="col-lg-6">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5><i class="fas fa-pie-chart text-fire"></i> Risk Level Distribution</h5>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="riskDistributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Temperature vs FWI Correlation -->
+            <div class="col-lg-8">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5><i class="fas fa-chart-line text-fire"></i> Temperature vs Fire Weather Index</h5>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="tempFwiChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Weather Conditions -->
+            <div class="col-lg-4">
+                <div class="chart-card">
+                    <div class="chart-header">
+                        <h5><i class="fas fa-cloud-sun text-fire"></i> Weather Conditions</h5>
+                    </div>
+                    <div class="chart-body">
+                        <canvas id="weatherConditionsChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Regional Comparison -->
+{% if data and data.regional_stats %}
+<section class="py-4 bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h3 class="text-center mb-4 text-forest">Regional Comparison</h3>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            {% for region, stats in data.regional_stats.items() %}
+            <div class="col-md-6">
+                <div class="regional-card">
+                    <div class="regional-header">
+                        <h5><i class="fas fa-map-marker-alt text-fire"></i> {{ region }}</h5>
+                    </div>
+                    <div class="regional-stats">
+                        <div class="row text-center">
+                            <div class="col-4">
+                                <div class="regional-stat">
+                                    <div class="stat-value">{{ stats.FWI }}</div>
+                                    <div class="stat-desc">Avg FWI</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="regional-stat">
+                                    <div class="stat-value">{{ stats.Temperature }}°C</div>
+                                    <div class="stat-desc">Avg Temp</div>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <div class="regional-stat">
+                                    <div class="stat-value">{{ stats.RH }}%</div>
+                                    <div class="stat-desc">Avg RH</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Data Not Available Message -->
+{% if not data %}
+<section class="py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center">
+                <div class="alert alert-warning">
+                    <i class="fas fa-exclamation-triangle fa-2x mb-3"></i>
+                    <h4>Data Not Available</h4>
+                    <p>Dashboard data could not be loaded. Please ensure the dataset is properly configured.</p>
+                    <a href="{{ url_for('predict_page') }}" class="btn btn-fire">Make a Prediction Instead</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+<script>
+    // Pass data to JavaScript
+    const dashboardData = {{ data|tojson if data else '{}' }};
+</script>
+{% endblock %}
